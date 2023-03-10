@@ -79,55 +79,64 @@ class _AppState extends State<App> {
         body: Column(
           children: [
             Flexible(
-              flex: 1,
-              child: Container(
-                margin: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextField(
-                      controller: alturaController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Altura (cm)",
-                      ),
-                    ),
-                    TextField(
-                      controller: pesoController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Peso (kg)',
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.blue),
+                flex: 1,
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextField(
+                        controller: alturaController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Altura (cm)",
                         ),
-                        onPressed: () => calculaImc(),
-                        child: const Text('Calcular'),
                       ),
-                    ),
-                    Container(
-                      height: 50,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.red),
+                      TextField(
+                        controller: pesoController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Peso (kg)',
                         ),
-                        onPressed: () => handlerLimpar(),
-                        child: const Text('Limpar'),
                       ),
-                    )
-                  ],
-                ),
-              )
-            ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              height: 50,
+                              padding: const EdgeInsets.only(right: 5),
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(Colors.blue),
+                                ),
+                                onPressed: () => calculaImc(),
+                                child: const Text('Calcular'),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              height: 50,
+                              padding: const EdgeInsets.only(left: 5),
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all(Colors.red),
+                                ),
+                                onPressed: () => handlerLimpar(),
+                                child: const Text('Limpar'),
+                              ),
+                            )
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                )),
             Container(
               padding: const EdgeInsets.all(10),
               child: Stack(
@@ -144,33 +153,32 @@ class _AppState extends State<App> {
                     ),
                   ),
                   Container(
-                    color: Colors.white.withOpacity(0.5),
-                    margin: const EdgeInsets.only(top: 100),
-                    child: Column(
-                      children: [
-                        if (imc != 0)
-                        Center(
-                          child: Text(
-                            'IMC: ${imc.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
+                      color: Colors.white.withOpacity(0.5),
+                      margin: const EdgeInsets.only(top: 100),
+                      child: Column(
+                        children: [
+                          if (imc != 0)
+                            Center(
+                              child: Text(
+                                'IMC: ${imc.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        if (message != '')
-                        Center(
-                          child: Text(
-                          message,
-                          style: const TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
+                          if (message != '')
+                            Center(
+                              child: Text(
+                                message,
+                                style: const TextStyle(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
-                    )
-                  ),
+                        ],
+                      )),
                 ],
               ),
             ),
