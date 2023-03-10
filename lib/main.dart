@@ -1,107 +1,178 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(CalculadoraIMC());
+void main() {
+  runApp(App());
+}
 
-class CalculadoraIMC extends StatelessWidget {
-  const CalculadoraIMC({super.key});
+//Column -> abaixo do outro
+//Row -> do lado do outro
+//Stack -> em cima do outro
+
+class App extends StatefulWidget {
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  final alturaController = TextEditingController();
+  final pesoController = TextEditingController();
+
+  var image = 'images/abaixo.jpg';
+  var message = '';
+  double imc = 0;
+
+  void calculaImc() {
+    double peso = double.parse(pesoController.text);
+    double altura = double.parse(alturaController.text);
+    imc = peso / (altura * altura);
+
+    if (imc < 18.5) {
+      setState(() {
+        image = 'images/abaixo.jpg';
+
+        message = 'Abaixo do peso';
+      });
+    } else if (imc >= 18.5 && imc <= 24.9) {
+      setState(() {
+        image = 'images/ideal.jpg';
+
+        message = 'Peso normal';
+      });
+    } else if (imc >= 25 && imc <= 29.9) {
+      setState(() {
+        image = 'images/excesso.jpg';
+
+        message = 'Sobrepeso';
+      });
+    } else if (imc >= 30 && imc < 34.9) {
+      setState(() {
+        image = 'images/obesidade1.jpg';
+
+        message = 'Obesidade 1';
+      });
+    } else {
+      setState(() {
+        image = 'images/obesidade2.jpg';
+
+        message = 'Obesidade 2';
+      });
+    }
+  }
+
+  void handlerLimpar() {
+    setState(() {
+      alturaController.clear();
+      pesoController.clear();
+      imc = 0;
+      message = '';
+      image = 'images/abaixo.jpg';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Calculadora de IMC',
-      home: const TelaIMC(),
-    );
-  }
-}
-
-class TelaIMC extends StatefulWidget {
-  const TelaIMC({super.key});
-
-  @override
-  _TelaIMCState createState() => _TelaIMCState();
-}
-
-class _TelaIMCState extends State<TelaIMC> {
-  TextEditingController alturaController = TextEditingController();
-  TextEditingController pesoController = TextEditingController();
-  double resultado = 0;
-  String mensagem = '';
-  String imagem = '';
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Calculadora de IMC'),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Cálculo IMC'),
+        ),
+        body: Column(
           children: [
-            const SizedBox(height: 16.0),
-            if (imagem != '') Image.asset(
-              imagem,
-              height: 200.0,
-              fit: BoxFit.fitHeight,
+            Flexible(
+              flex: 1,
+              child: Container(
+                margin: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextField(
+                      controller: alturaController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Altura (cm)",
+                      ),
+                    ),
+                    TextField(
+                      controller: pesoController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Peso (kg)',
+                      ),
+                    ),
+                    Container(
+                      height: 50,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.blue),
+                        ),
+                        onPressed: () => calculaImc(),
+                        child: const Text('Calcular'),
+                      ),
+                    ),
+                    Container(
+                      height: 50,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.red),
+                        ),
+                        onPressed: () => handlerLimpar(),
+                        child: const Text('Limpar'),
+                      ),
+                    )
+                  ],
+                ),
+              )
             ),
-            const SizedBox(height: 16.0),
-            TextField(
-              controller: alturaController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Altura (cm)',
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-              controller: pesoController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Peso (kg)',
-              ),
-            ),
-            const SizedBox(height: 32.0),
             Container(
-              height: 50.0,
-              child: ElevatedButton(
-                onPressed: () {
-                  double altura = double.parse(alturaController.text) / 100;
-                  double peso = double.parse(pesoController.text);
-                  resultado = peso / (altura * altura);
-                  if (resultado < 18.5) {
-                    mensagem = 'Abaixo do peso';
-                    imagem = 'images/abaixo.jpg';
-                  } else if (resultado < 25) {
-                    mensagem = 'Peso normal';
-                    imagem = 'images/ideal.jpg';
-                  } else if (resultado < 30) {
-                    mensagem = 'Sobrepeso';
-                    imagem = 'images/excesso.jpg';
-                  } else if (resultado < 35) {
-                    mensagem = 'Obesidade grau 1';
-                    imagem = 'images/obesidade1.jpg';
-                  } else {
-                    mensagem = 'Obesidade grau 2';
-                    imagem = 'images/obesidade2.jpg';
-                  }
-                  setState(() {});
-                },
-                child: const Text(
-                  'Calcular',
-                  style: TextStyle(color: Colors.white, fontSize: 24.0)
-                )
+              padding: const EdgeInsets.all(10),
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Center(
+                      child: Image.asset(
+                        image,
+                        fit: BoxFit.cover,
+                        width: 100,
+                        height: 300,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    color: Colors.white.withOpacity(0.5),
+                    margin: const EdgeInsets.only(top: 100),
+                    child: Column(
+                      children: [
+                        if (imc != 0)
+                        Center(
+                          child: Text(
+                            'IMC: ${imc.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        if (message != '')
+                        Center(
+                          child: Text(
+                          message,
+                          style: const TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 16.0),
-            Text(
-              'Resultado: ${resultado.toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 24.0),
-            ),
-            const SizedBox(height: 8.0),
-            Text(
-              'Classificação: $mensagem',
-              style: const TextStyle(fontSize: 18.0),
             ),
           ],
         ),
